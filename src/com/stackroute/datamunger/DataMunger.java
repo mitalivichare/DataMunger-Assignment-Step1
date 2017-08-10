@@ -96,14 +96,14 @@ public class DataMunger {
 	}
 	// get order by fields if order by clause exists
 	public String[] getOrderByFields(String queryString) {
-		
+		//check for the existence of order by clause
 		String[] orderByField=queryString.split("order by")[1].trim().split("\\s,+");
 		return orderByField;
 	}
 	
 	// get group by fields if group by clause exists
 	public String[] getGroupByFields(String queryString) {
-		
+		//check for the existence of group by clause
 		String[] groupByField=queryString.split("group by")[1].trim().split("\\s,+");
 		return groupByField;
 	}
