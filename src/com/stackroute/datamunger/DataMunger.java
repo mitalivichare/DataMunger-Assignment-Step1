@@ -22,8 +22,10 @@ public class DataMunger {
 
 	
 	public void parseQuery(String queryString) {
+		
+		queryString=queryString.toLowerCase();
 		//call the methods
-		System.out.println(getSplitStrings(queryString));
+		getSplitStrings(queryString);
 		getFile(queryString);
 		getBaseQuery(queryString);
 		getConditionsPartQuery(queryString);
@@ -52,7 +54,7 @@ public class DataMunger {
 	// getting the baseQuery and display
 	public String getBaseQuery(String queryString) {
 		
-		String baseQuery=queryString.split("where")[0].split("group by")[0].split("order by")[0];
+		String baseQuery=queryString.split("order by")[0].split("group by")[0].split("where")[0];
 		return baseQuery;
 
 	}
@@ -60,9 +62,10 @@ public class DataMunger {
 	// get and display the where conditions part(if where condition exists)
 	public String getConditionsPartQuery(String queryString) {
 		
+		queryString=queryString.toLowerCase();
 		if(queryString.contains("where"))
 		{
-			String whereCondition=queryString.split("where")[1].trim().split("group by")[0].trim().split("order by")[0].trim();
+			String whereCondition=queryString.split("order by")[0].split("group by")[0].split("where")[1];
 			return whereCondition;
 		}
 		else
@@ -76,8 +79,17 @@ public class DataMunger {
 	 conditionalOperator for each conditions*/
 	public String[] getConditions(String queryString) {
 		
-	
-		return null;
+		queryString=queryString.toLowerCase();
+		if(queryString.contains("where"))
+		{
+			String whereCondition=queryString.split("order by")[0].trim().split("group by")[0].trim().split("where")[1].trim();
+			String[] conditions=whereCondition.split("\\s+and\\s+|\\s+or\\s+");
+			return conditions;
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	// get the logical operators(applicable only if multiple conditions exist)
@@ -90,22 +102,36 @@ public class DataMunger {
 	}
 	public String[] getFields(String queryString) {
 		
-		String[] allfields = queryString.split("select")[1].trim().split("from")[0].split("[\\s,]+");
-		return allfields;
+		String[] requiredfields = queryString.split("select")[1].trim().split("from")[0].split("[\\s,]+");
+		return requiredfields;
 		
 	}
 	// get order by fields if order by clause exists
 	public String[] getOrderByFields(String queryString) {
-		//check for the existence of order by clause
-		String[] orderByField=queryString.split("order by")[1].trim().split("\\s,+");
-		return orderByField;
+		
+		if(queryString.contains("order by"))
+		{
+			String[] orderByField=queryString.split("order by")[1].trim().split("[\\s,]+");
+			return orderByField;
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	// get group by fields if group by clause exists
 	public String[] getGroupByFields(String queryString) {
-		//check for the existence of group by clause
-		String[] groupByField=queryString.split("group by")[1].trim().split("\\s,+");
-		return groupByField;
+		
+		if(queryString.contains("group by"))
+		{
+			String[] groupByField=queryString.split("group by")[1].trim().split("[\\s,]+");
+			return groupByField;
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	// parse and display aggregate functions(if applicable)
@@ -119,4 +145,4 @@ public class DataMunger {
 	
 	
 	
-}
+}	
