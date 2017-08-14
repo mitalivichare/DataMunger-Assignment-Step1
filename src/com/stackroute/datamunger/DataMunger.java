@@ -41,10 +41,11 @@ public class DataMunger {
 	
 	// parse the queryString into words and display
 	public String[] getSplitStrings(String queryString) {
-	
+		//avoid using a regex here, make it simple, the students will not know regex at this point in time
 		String[] words=queryString.split("\\s+");
 		for(String word : words)
 		{
+			//what will you print? would it remain empty?
 			System.out.println(
 );
 		}
@@ -55,6 +56,7 @@ public class DataMunger {
 	// get and display the filename
 	public String getFile(String queryString) {
 		
+		//avoid regex
 		String fileName=queryString.split("from")[1].split("\\s+")[1];
 		System.out.println(fileName);
 		return fileName;
@@ -62,7 +64,7 @@ public class DataMunger {
 	
 	// getting the baseQuery and display
 	public String getBaseQuery(String queryString) {
-		
+		//good compact code
 		String baseQuery=queryString.split("order by")[0].split("group by")[0].split("where")[0];
 		System.out.println(baseQuery);
 		return baseQuery;
@@ -97,6 +99,7 @@ public class DataMunger {
 		if(queryString.contains("where"))
 		{
 			String whereCondition=queryString.split("order by")[0].trim().split("group by")[0].trim().split("where")[1].trim();
+			//can we change this line without using regex
 			String[] conditions=whereCondition.split("\\s+and\\s+|\\s+or\\s+");
 			for(String condition : conditions)
 			{
@@ -123,11 +126,13 @@ public class DataMunger {
 
 		queryString=queryString.toLowerCase();
 		String[] logicalOperators;
+		//dont use an arraylist in this assignment
 		List<String> operators=new ArrayList<>();
 
 		if(queryString.contains("where"))
 		{
 			String whereCondition=queryString.split("order by")[0].trim().split("group by")[0].trim().split("where")[1].trim();
+			//avoid regex
 			String[] conditions=whereCondition.split("\\s+");
 			for(String word : conditions)
 			{
@@ -153,7 +158,7 @@ public class DataMunger {
 		
 	}
 	public String[] getFields(String queryString) {
-		
+		//avoid regex
 		String[] requiredfields = queryString.split("select")[1].trim().split("from")[0].split("[\\s,]+");
 		for(String field : requiredfields)
 		{
@@ -167,6 +172,7 @@ public class DataMunger {
 		
 		if(queryString.contains("order by"))
 		{
+			//avoid regex
 			String[] orderByField=queryString.split("order by")[1].trim().split("[\\s,]+");
 			return orderByField;
 		}
@@ -181,6 +187,7 @@ public class DataMunger {
 		
 		if(queryString.contains("group by"))
 		{
+			//avoid regex
 			String[] groupByField=queryString.split("group by")[1].trim().split("[\\s,]+");
 			return groupByField;
 		}
@@ -197,6 +204,7 @@ public class DataMunger {
 		int counter=1;
 		if(queryString.contains("count") || queryString.contains("sum") || queryString.contains("min") || queryString.contains("max") || queryString.contains("avg"))
 		{
+			//please check the requirements. Is it actually required?
 			String[] aggregateFunctions=queryString.split("select")[1].trim().split("from")[0].trim().split(",");
 			for(String function : aggregateFunctions)
 			{
