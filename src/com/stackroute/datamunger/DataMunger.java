@@ -1,6 +1,8 @@
 package com.stackroute.datamunger;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class DataMunger {
@@ -40,7 +42,13 @@ public class DataMunger {
 	// parse the queryString into words and display
 	public String[] getSplitStrings(String queryString) {
 	
-		String[] words=queryString.split("\\w+");
+		String[] words=queryString.split("\\s+");
+		for(String word : words)
+		{
+			System.out.println(
+);
+		}
+		
 		return words;
 	}
 
@@ -48,6 +56,7 @@ public class DataMunger {
 	public String getFile(String queryString) {
 		
 		String fileName=queryString.split("from")[1].split("\\s+")[1];
+		System.out.println(fileName);
 		return fileName;
 	}
 	
@@ -55,6 +64,7 @@ public class DataMunger {
 	public String getBaseQuery(String queryString) {
 		
 		String baseQuery=queryString.split("order by")[0].split("group by")[0].split("where")[0];
+		System.out.println(baseQuery);
 		return baseQuery;
 
 	}
@@ -66,6 +76,7 @@ public class DataMunger {
 		if(queryString.contains("where"))
 		{
 			String whereCondition=queryString.split("order by")[0].split("group by")[0].split("where")[1];
+			System.out.println(whereCondition);
 			return whereCondition;
 		}
 		else
@@ -80,10 +91,25 @@ public class DataMunger {
 	public String[] getConditions(String queryString) {
 		
 		queryString=queryString.toLowerCase();
+		String[] nameAndValue;
+		String propertyName,propertyValue,conditionalOperator;
+		int counter=1;
 		if(queryString.contains("where"))
 		{
 			String whereCondition=queryString.split("order by")[0].trim().split("group by")[0].trim().split("where")[1].trim();
 			String[] conditions=whereCondition.split("\\s+and\\s+|\\s+or\\s+");
+			for(String condition : conditions)
+			{
+				nameAndValue=condition.split("<=|>=|!=|=|<|>");
+				propertyName=nameAndValue[0].trim();
+				propertyValue=nameAndValue[1].trim();
+				conditionalOperator=condition.split(propertyName)[1].trim().split(propertyValue)[0].trim();
+				System.out.println("Condition "+counter+" :");
+				System.out.println("variable : "+propertyName);
+				System.out.println("operator : "+conditionalOperator);
+				System.out.println("value : "+propertyValue);
+				counter++;
+			}
 			return conditions;
 		}
 		else
@@ -95,14 +121,44 @@ public class DataMunger {
 	// get the logical operators(applicable only if multiple conditions exist)
 	public String[] getLogicalOperators(String queryString) {
 
-		
-		
-		return null;
+		queryString=queryString.toLowerCase();
+		String[] logicalOperators;
+		List<String> operators=new ArrayList<>();
+
+		if(queryString.contains("where"))
+		{
+			String whereCondition=queryString.split("order by")[0].trim().split("group by")[0].trim().split("where")[1].trim();
+			String[] conditions=whereCondition.split("\\s+");
+			for(String word : conditions)
+			{
+				if(word.equals("and"))
+				{
+					operators.add("and");
+					//logicalOperators=new String[]{"and"};
+				}
+				else if(word.equals("or"))
+				{
+					operators.add("or");
+					//logicalOperators=new String[]{"or"};
+				}
+			}
+			logicalOperators=new String[operators.size()];
+			logicalOperators=operators.toArray(logicalOperators);
+		return logicalOperators;
+		}
+		else
+		{
+			return null;
+		}
 		
 	}
 	public String[] getFields(String queryString) {
 		
 		String[] requiredfields = queryString.split("select")[1].trim().split("from")[0].split("[\\s,]+");
+		for(String field : requiredfields)
+		{
+			System.out.println(field);
+		}
 		return requiredfields;
 		
 	}
@@ -137,8 +193,26 @@ public class DataMunger {
 	// parse and display aggregate functions(if applicable)
 	public String[] getAggregateFunctions(String queryString) {
 		
-
-		return null;
+		String aggregateName,aggregateField;
+		int counter=1;
+		if(queryString.contains("count") || queryString.contains("sum") || queryString.contains("min") || queryString.contains("max") || queryString.contains("avg"))
+		{
+			String[] aggregateFunctions=queryString.split("select")[1].trim().split("from")[0].trim().split(",");
+			for(String function : aggregateFunctions)
+			{
+				aggregateName=function.split("\\(")[0].trim();
+				aggregateField=function.split("\\(")[1].trim().split("\\)")[0].trim();
+				System.out.println("Aggregate "+counter+" :");
+				System.out.println("Aggregate Name : "+aggregateName);
+				System.out.println("Aggregate Field : "+aggregateField);
+				counter++;
+			}
+			return aggregateFunctions;
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	
